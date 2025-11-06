@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "start_url": "index.html",
   "display": "fullscreen",
-  "description": "AltureTV — version Saphi",
+  "description": "Regardez vos chaînes et films préférés, regardez des programmes du passé, mettez en favoris vos chaînes tv et regardez le guide tv sur votre téléviseur connecté grâce à AltureTV. Aucun payement n'est nécessaire pour l'instant. Certaines chaînes peuvent ne pas être disponible ou ne peuvent pas être supporté car l'application est encore en version bêta.",
   "icons": [
     { "src": "icons/icon72.svg", "sizes": "72x72", "type": "image/svg+xml" },
     { "src": "icons/icon144.svg", "sizes": "144x144", "type": "image/svg+xml" },
