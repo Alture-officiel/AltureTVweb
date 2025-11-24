@@ -16,15 +16,25 @@
         <img src="img/logo.png" alt="AltureTV" class="w-8 h-8" />
         <span class="text-lg font-bold">AltureTV</span>
       </a>
-      <nav class="hidden md:flex gap-6 text-sm font-medium">
-        <a href="" class="text-blue-400">En direct</a>
-        <a href="replay" class="hover:text-blue-400">Replays</a>
-        <a href="vod" class="hover:text-blue-400">VOD</a>
-        <a href="favoris" class="hover:text-blue-400">Favoris</a>
-        <a href="parametres" class="hover:text-blue-400">Paramètres</a>
-        <a href="changelogs" class="hover:text-blue-400">Changelogs</a>
-      </nav>
-      <button class="md:hidden text-white" onclick="toggleMenu()">☰</button>
+
+      <!-- Right side: nav + live clock + mobile menu button -->
+      <div class="flex items-center gap-4">
+        <nav class="hidden md:flex gap-6 text-sm font-medium">
+          <a href="" class="text-blue-400">En direct</a>
+          <a href="replay" class="hover:text-blue-400">Replays</a>
+          <a href="vod" class="hover:text-blue-400">VOD</a>
+          <a href="favoris" class="hover:text-blue-400">Favoris</a>
+          <a href="parametres" class="hover:text-blue-400">Paramètres</a>
+          <a href="changelogs" class="hover:text-blue-400">Changelogs</a>
+        </nav>
+
+        <!-- Live clock placed to the right of the navbar -->
+        <div class="hidden md:block">
+          <span id="liveClock" role="timer" aria-live="polite" aria-atomic="true" class="text-sm text-gray-300"></span>
+        </div>
+
+        <button class="md:hidden text-white" onclick="toggleMenu()">☰</button>
+      </div>
     </div>
     <div id="mobileMenu" class="md:hidden hidden px-4 pb-4">
       <a href="" class="block py-2 text-blue-400">En direct</a>
@@ -147,7 +157,7 @@
       <div class="mt-4 text-center">
         <p id="france24Status" class="text-sm text-gray-400">Si le flux ne se charge pas, tu peux ouvrir France24 directement :</p>
         <div class="mt-2 flex justify-center gap-2">
-          <a id="france24OpenExternal" class="px-4 py-2 rounded bg-blue-600 hover:bg-blue-500 text-white text-sm" target="_blank" rel="noopener noreferrer" href="https://www.france24.com/fr/direct">Ouvrir France24 (site)</a>
+          <a id="france24OpenExternal" class="px-4 py-2 rounded bg-blue-600 hover:bg-blue-500 text-white text-sm" target="_blank" rel="noopener noreferrer" href="https://www.france24.com/fr/direct">Ou[...]
           <button onclick="France24Player.close()" class="px-4 py-2 rounded border border-gray-700 text-sm">x</button>
         </div>
       </div>
@@ -215,6 +225,19 @@
       document.getElementById("t18Modal").classList.add("hidden");
     }
 
+    // helper wrapper used by the card
+    function openFrance24() {
+      // update external open link to match the configured stream page
+      const external = document.getElementById('france24OpenExternal');
+      if (external) external.href = 'https://www.france24.com/fr/direct';
+      if (window.France24Player) {
+        France24Player.open();
+      } else {
+        // fallback: open external site if the player lib is missing
+        window.open('https://www.france24.com/fr/direct', '_blank');
+      }
+    }
+
     // France24 integration: init France24Player with sensible defaults for mobile (muted autoplay)
     document.addEventListener('DOMContentLoaded', function(){
       // init player; change src if you have another HLS URL
@@ -231,20 +254,19 @@
       } else {
         console.warn('France24Player script non chargé — place js/france24-player.js dans le dossier js/ ou inline le code.');
       }
+
+      // Live clock initialization
+      function updateClock() {
+        const el = document.getElementById('liveClock');
+        if (!el) return;
+        const now = new Date();
+        const opts = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
+        el.textContent = now.toLocaleTimeString('fr-FR', opts);
+      }
+      updateClock();
+      setInterval(updateClock, 1000);
     });
 
-    // helper wrapper used by the card
-    function openFrance24() {
-      // update external open link to match the configured stream page
-      const external = document.getElementById('france24OpenExternal');
-      if (external) external.href = 'https://www.france24.com/fr/direct';
-      if (window.France24Player) {
-        France24Player.open();
-      } else {
-        // fallback: open external site if the player lib is missing
-        window.open('https://www.france24.com/fr/direct', '_blank');
-      }
-    }
   </script>
 
   <!-- Small note for debugging on Chrome Android -->
@@ -258,4 +280,4 @@
   </script>
 
 </body>
-          </html>
+        </html>
