@@ -69,15 +69,6 @@
         </div>
       </div>
 
-      <!-- Carte France 24 (sans iframe) -->
-      <div class="bg-[#1a1a1a] rounded-xl overflow-hidden shadow hover:scale-[1.01] transition cursor-pointer" onclick="openFrance24()">
-        <img src="img/channels/france24.png" alt="Logo France 24" class="w-full h-40 object-cover" />
-        <div class="p-4">
-          <h2 class="text-xl font-semibold">France 24</h2>
-          <p class="text-sm text-gray-400">En Direct - France 24 | International | Actualités en continu</p>
-        </div>
-      </div>
-
       <!-- Carte Novo19 -->
       <div class="bg-[#1a1a1a] rounded-xl overflow-hidden shadow hover:scale-[1.01] transition cursor-pointer" onclick="openNovo19()">
         <img src="img/channels/novo19.jpeg" alt="Logo Novo19" class="w-full h-40 object-cover" />
@@ -143,33 +134,8 @@
     </div>
   </div>
 
-  <!-- France24 modal (video player, no iframe) -->
-  <div id="france24Modal" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center hidden z-50">
-    <div class="max-w-3xl w-full bg-[#111] rounded-lg p-6 relative">
-      <button onclick="France24Player.close()" class="absolute top-2 right-4 text-white text-2xl">×</button>
-      <h2 class="text-xl font-bold mb-4">France 24 - En direct</h2>
-
-      <div class="w-full aspect-video">
-        <!-- video element used by the france24 player JS -->
-        <video id="france24Video" controls class="w-full h-96 rounded bg-black"></video>
-      </div>
-
-      <div class="mt-4 text-center">
-        <p id="france24Status" class="text-sm text-gray-400">Si le flux ne se charge pas, tu peux ouvrir France24 directement :</p>
-        <div class="mt-2 flex justify-center gap-2">
-          <a id="france24OpenExternal" class="px-4 py-2 rounded bg-blue-600 hover:bg-blue-500 text-white text-sm" target="_blank" rel="noopener noreferrer" href="https://www.france24.com/fr/direct">Ou[...]
-          <button onclick="France24Player.close()" class="px-4 py-2 rounded border border-gray-700 text-sm">x</button>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- France24 player JS (external file expected at js/france24-player.js) -->
-  <script src="players-tv/france24.js"></script>
-
   <script>
-    // Basic UI functions + integration glue to France24Player
+    // Basic UI functions
     function toggleMenu() {
       const menu = document.getElementById("mobileMenu");
       menu.classList.toggle("hidden");
@@ -225,36 +191,7 @@
       document.getElementById("t18Modal").classList.add("hidden");
     }
 
-    // helper wrapper used by the card
-    function openFrance24() {
-      // update external open link to match the configured stream page
-      const external = document.getElementById('france24OpenExternal');
-      if (external) external.href = 'https://www.france24.com/fr/direct';
-      if (window.France24Player) {
-        France24Player.open();
-      } else {
-        // fallback: open external site if the player lib is missing
-        window.open('https://www.france24.com/fr/direct', '_blank');
-      }
-    }
-
-    // France24 integration: init France24Player with sensible defaults for mobile (muted autoplay)
     document.addEventListener('DOMContentLoaded', function(){
-      // init player; change src if you have another HLS URL
-      if (window.France24Player) {
-        France24Player.init({
-          videoId: 'france24Video',
-          modalId: 'france24Modal',
-          // flux HLS public (peut être bloqué par CORS ou par le fournisseur)
-          src: 'https://static.france24.com/live/F24_FR_LO_HLS/live_web.m3u8',
-          autoplayMuted: true,     // recommandé sur Chrome Android pour autoriser autoplay
-          maxRetries: 3,
-          xhrTimeout: 15000
-        });
-      } else {
-        console.warn('France24Player script non chargé — place js/france24-player.js dans le dossier js/ ou inline le code.');
-      }
-
       // Live clock initialization
       function updateClock() {
         const el = document.getElementById('liveClock');
@@ -280,4 +217,4 @@
   </script>
 
 </body>
-        </html>
+</html>
