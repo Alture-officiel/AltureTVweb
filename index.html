@@ -69,8 +69,8 @@
         </div>
       </div>
 
-      <!-- Carte Novo19 -->
-      <div class="bg-[#1a1a1a] rounded-xl overflow-hidden shadow hover:scale-[1.01] transition cursor-pointer" onclick="openNovo19()">
+      <!-- Carte Novo19 (ouvre modal HLS) -->
+      <div class="bg-[#1a1a1a] rounded-xl overflow-hidden shadow hover:scale-[1.01] transition cursor-pointer" onclick="openNovo19('https://example.com/novo19/live.m3u8')">
         <img src="img/channels/novo19.jpeg" alt="Logo Novo19" class="w-full h-40 object-cover" />
         <div class="p-4">
           <h2 class="text-xl font-semibold">Donnée EPG inconnue</h2>
@@ -112,18 +112,19 @@
     </div>
   </div>
 
-  <!-- Novo19 modal (iframe) -->
+  <!-- Novo19 modal (HLS/m3u8 video) -->
   <div id="novo19Modal" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center hidden z-50">
     <div class="max-w-3xl w-full bg-[#111] rounded-lg p-6 relative">
       <button onclick="closeNovo19()" class="absolute top-2 right-4 text-white text-2xl">×</button>
       <h2 class="text-xl font-bold mb-4">19 - Novo19</h2>
       <div class="w-full aspect-video">
-        <iframe src="https://novo19.ouest-france.fr/player/novo19" allowfullscreen frameborder="0" class="w-full h-96 rounded"></iframe>
+        <video id="novo19Video" controls class="w-full h-96 rounded bg-black"></video>
       </div>
+      <!-- Note: external "Ouvrir Novo19" link and status text removed per request -->
     </div>
   </div>
 
-  <!-- T18 modal (iframe) -->
+  <!-- T18 modal (iframe kept as before) -->
   <div id="t18Modal" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center hidden z-50">
     <div class="max-w-3xl w-full bg-[#111] rounded-lg p-6 relative">
       <button onclick="closeT18()" class="absolute top-2 right-4 text-white text-2xl">×</button>
@@ -135,7 +136,9 @@
   </div>
 
   <script>
-    // Basic UI functions
+    // Basic UI functions + Novo19 HLS handling
+    let _currentNovo19Hls = null;
+
     function toggleMenu() {
       const menu = document.getElementById("mobileMenu");
       menu.classList.toggle("hidden");
@@ -177,13 +180,91 @@
       document.getElementById("bfmtvModal").classList.add("hidden");
     }
 
-    // Novo19 / T18 modals (iframe based)
-    function openNovo19() {
-      document.getElementById("novo19Modal").classList.remove("hidden");
+    // Novo19 HLS modal functions
+    function openNovo19(hlsUrl) {
+      const modal = document.getElementById('novo19Modal');
+      const video = document.getElementById('novo19Video');
+
+      // Remove any previously existing status text or external link nodes inside the modal
+      try {
+        const statusEl = modal.querySelector('.novo19-status');
+        if (statusEl) statusEl.remove();
+        const externalLink = modal.querySelector('.novo19-external-link');
+        if (externalLink) externalLink.remove();
+      } catch (e) {
+        // ignore
+      }
+
+      // Destroy previous hls instance if present
+      if (window.Hls && _currentNovo19Hls) {
+        try {
+          _currentNovo19Hls.destroy();
+        } catch (e) { console.warn('Failed to destroy previous Hls instance', e); }
+        _currentNovo19Hls = null;
+      }
+
+      if (!hlsUrl) {
+        console.warn('Flux Novo19 non configuré.');
+        modal.classList.remove('hidden');
+        return;
+      }
+
+      // Native HLS support (Safari / iOS)
+      if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        video.src = hlsUrl;
+        video.load();
+        modal.classList.remove('hidden');
+        return;
+      }
+
+      // Use hls.js if available
+      if (window.Hls) {
+        const hls = new Hls({ enableWorker: true });
+        _currentNovo19Hls = hls;
+        hls.loadSource(hlsUrl);
+        hls.attachMedia(video);
+        modal.classList.remove('hidden');
+        video.play().catch(()=>{});
+      } else {
+        // Dynamically load hls.js from CDN and initialize
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/hls.js@latest';
+        script.onload = function(){
+          if (window.Hls) {
+            const hls = new Hls({ enableWorker: true });
+            _currentNovo19Hls = hls;
+            hls.loadSource(hlsUrl);
+            hls.attachMedia(video);
+            modal.classList.remove('hidden');
+            video.play().catch(()=>{});
+          } else {
+            // Instead of writing status text into the DOM, log a console warning
+            console.warn('Impossible de charger le lecteur HLS.');
+            modal.classList.remove('hidden');
+          }
+        };
+        script.onerror = function(){
+          console.warn('Impossible de charger le lecteur HLS.');
+          modal.classList.remove('hidden');
+        };
+        document.head.appendChild(script);
+      }
     }
+
     function closeNovo19() {
-      document.getElementById("novo19Modal").classList.add("hidden");
+      const video = document.getElementById('novo19Video');
+      const modal = document.getElementById('novo19Modal');
+      video.pause();
+      video.removeAttribute('src');
+      video.load();
+      if (window.Hls && _currentNovo19Hls) {
+        try { _currentNovo19Hls.destroy(); } catch(e){}
+        _currentNovo19Hls = null;
+      }
+      modal.classList.add('hidden');
     }
+
+    // T18 modals (iframe-based)
     function openT18() {
       document.getElementById("t18Modal").classList.remove("hidden");
     }
