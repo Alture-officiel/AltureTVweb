@@ -44,16 +44,16 @@
         <img src="img/channels/tf1.jpeg" alt="TF1plus" class="w-full h-40 object-cover" />
         <div class="p-4">
           <h2 class="text-xl font-semibold">TF1+</h2>
-          <p class="text-sm text-gray-400">Voir les replays de toutes les chaînes du groupe TF1 avec TF1+</p>
+          <p class="text-sm text-gray-400">Replays des chaînes du Groupe TF1</p>
         </div>
       </a>
 
       <!-- Carte émission -->
       <div class="bg-[#1a1a1a] rounded-xl overflow-hidden shadow hover:scale-[1.01] transition cursor-pointer" onclick="openPlayer('Nom de l’émission', 'video.mp4')">
-        <img src="img/logo.png" alt="TF1" class="w-full h-40 object-cover" />
+        <img src="img/logo.png" alt="francetv" class="w-full h-40 object-cover" />
         <div class="p-4">
-          <h2 class="text-xl font-semibold">test</h2>
-          <p class="text-sm text-gray-400">En Direct - France 2 | Inconnu - Inconnu | Inconnu </p>
+          <h2 class="text-xl font-semibold">france•tv</h2>
+          <p class="text-sm text-gray-400">Replays des chaînes de France Télévisions</p>
         </div>
       </div>
       
@@ -75,11 +75,7 @@
     </div>
   </div>
 
-  <script>
-    function toggleMenu() {
-      const menu = document.getElementById("mobileMenu");
-      menu.classList.toggle("hidden");
-    }
+  
 
     function openPlayer(titre, src) {
       document.getElementById("playerTitle").textContent = titre;
@@ -95,41 +91,6 @@
     }
   </script>
 
-  <!-- Bouton ⋮⋮⋮ dans la navbar ou ailleurs -->
-<button id="appsMenuBtn" class="fixed bottom-8 right-8 bg-[#1a1a1a] p-3 rounded-full shadow-lg text-2xl z-50">⋮⋮⋮</button>
-
-<!-- Menu des applications -->
-<div id="appsMenu" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 hidden">
-  <div class="bg-[#222] rounded-lg p-8 flex flex-col items-center relative min-w-[300px]">
-    <button onclick="toggleAppsMenu()" class="absolute top-2 right-4 text-white text-2xl">×</button>
-    <h3 class="text-xl font-semibold mb-4">Services Alture</h3>
-    <div class="flex flex-wrap gap-6">
-      <!-- Exemple d'application 1 -->
-      <a href="/AltureTVweb" target="_blank" class="flex flex-col items-center group">
-        <img src="img/logo.png" alt="AltureTV Logo" class="w-16 h-16 object-cover rounded-full border-2 border-transparent group-hover:border-blue-400 transition"/>
-        <span class="mt-2 text-sm">AltureTV</span>
-      </a>
-      <!-- Exemple d'application 2 -->
-      <a href="https://rooweb.onrender.com" target="_blank" class="flex flex-col items-center group">
-        <img src="img/logo.png" alt="RooWeb Logo" class="w-16 h-16 object-cover rounded-full border-2 border-transparent group-hover:border-blue-400 transition"/>
-        <span class="mt-2 text-sm">RooWeb</span>
-      </a>
-      <!-- Ajoute d'autres applications ici -->
-    </div>
-  </div>
-</div>
-
-<script>
-  // Affiche/masque le menu des applications
-  function toggleAppsMenu() {
-    document.getElementById('appsMenu').classList.toggle('hidden');
-  }
-  document.getElementById('appsMenuBtn').addEventListener('click', toggleAppsMenu);
-  // Permet de fermer le menu si on clique en dehors du modal
-  document.getElementById('appsMenu').addEventListener('click', function(e) {
-    if(e.target === this) toggleAppsMenu();
-  });
-</script>
   
 </body>
 </html>

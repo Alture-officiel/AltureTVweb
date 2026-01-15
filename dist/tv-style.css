@@ -1,0 +1,50 @@
+:root{
+  font-size: 18px; /* ajuster selon résolution TV */
+  --focus-color: #ffcc00;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:#020202;
+  color:#fff;
+  font-family: Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+.topbar{
+  padding: 18px 32px;
+  background: linear-gradient(#0b0b0b,#0f0f0f);
+  border-bottom: 1px solid #222;
+}
+.topbar h1{
+  margin:0;
+  font-size: 2.0rem;
+}
+.grid{
+  display:flex;
+  padding: 24px;
+  gap: 24px;
+}
+.list{
+  display:grid;
+  grid-template-columns: repeat(2, minmax(300px, 1fr));
+  gap: 20px;
+  width:100%;
+}
+.item{
+  background:#111;
+  padding: 28px;
+  border-radius:8px;
+  font-size: 1.6rem;
+  transition: transform .12s ease, box-shadow .12s ease;
+  outline: none;
+  min-height: 120px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
+.item:focus{
+  outline: 3px solid var(--focus-color);
+  transform: scale(1.03);
+  box-shadow: 0 6px 18px rgba(0,0,0,.6);
+}

@@ -1,0 +1,6 @@
+{
+  "name": "alture-saphi",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build:web": "echo \"Placez ici la commande build de votre web app (ex: npm run build) qui sort dans ./dist\"",
